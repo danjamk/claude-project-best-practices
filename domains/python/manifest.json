@@ -1,0 +1,66 @@
+{
+  "name": "python",
+  "version": "1.0.0",
+  "description": "Python development with Poetry, pytest, and modern tooling",
+  "dependencies": ["git"],
+  "files": {
+    ".claude/commands/": [
+      "test.md",
+      "lint.md", 
+      "format.md",
+      "setup-python.md"
+    ],
+    ".claude/agents/": [
+      "python-tester.md",
+      "python-architect.md"
+    ],
+    "": [
+      "pyproject.toml",
+      ".env.example"
+    ],
+    "src/": [
+      "__init__.py"
+    ],
+    "tests/": [
+      "__init__.py",
+      "conftest.py",
+      "test_example.py"
+    ],
+    "scripts/": [
+      "setup.py"
+    ]
+  },
+  "prompts": {
+    "python_version": {
+      "question": "Python version (3.11, 3.12, 3.13)?",
+      "default": "3.12",
+      "validation": "^3\\.(11|12|13)$"
+    },
+    "testing_framework": {
+      "question": "Testing framework (pytest, unittest)?", 
+      "default": "pytest",
+      "validation": "^(pytest|unittest)$"
+    },
+    "include_linting": {
+      "question": "Include linting tools (black, ruff, mypy)?",
+      "default": "y",
+      "validation": "^[yn]$"
+    },
+    "include_fastapi": {
+      "question": "Include FastAPI for web APIs?",
+      "default": "n",
+      "validation": "^[yn]$"
+    }
+  },
+  "settings_updates": {
+    "allowedTools": [
+      "Bash(poetry*)",
+      "Bash(pip*)",
+      "Bash(python*)",
+      "Bash(pytest*)",
+      "Bash(black*)",
+      "Bash(ruff*)",
+      "Bash(mypy*)"
+    ]
+  }
+}

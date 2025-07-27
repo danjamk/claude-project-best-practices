@@ -1,0 +1,81 @@
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "temperature": 0.2,
+  "memoryBankName": "project-{{project_name}}",
+  "memoryBankTags": ["{{domains}}", "project-type:{{project_type}}"],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/project-boundary.py"
+          },
+          {
+            "type": "command", 
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/pre-tool-use-safety.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$(date): File modified - $CLAUDE_TOOL_INPUT\" >> ~/.claude/edit-history.log"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$(date): $CLAUDE_TOOL_INPUT\" >> ~/.claude/bash-history.log"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/prompt-safety-check.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Session completed at $(date)\" >> ~/.claude/session-log.txt"
+          }
+        ]
+      }
+    ]
+  },
+  "allowedTools": [
+    "Read", "Edit", "Write", "MultiEdit",
+    "Bash(ls*)", "Bash(cat*)", "Bash(grep*)", "Bash(find*)",
+    "Bash(git status)", "Bash(git log)", "Bash(git diff)", "Bash(git branch)",
+    "Bash(make*)", "Bash(python*)", "Bash(pytest*)",
+    "Bash(poetry*)", "Bash(pip*)",
+    "Bash(aws * describe*)", "Bash(aws * list*)", "Bash(aws * get*)",
+    "Bash(docker ps)", "Bash(docker images)", "Bash(docker logs*)",
+    "WebSearch", "WebFetch", "Glob", "Grep", "LS",
+    "TodoWrite", "Task", "NotebookRead", "NotebookEdit"
+  ],
+  "enabledFeatures": {
+    "autoAccept": false,
+    "planMode": true,
+    "extendedThinking": true,
+    "memoryBanks": true
+  }
+}
